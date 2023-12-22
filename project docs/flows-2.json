@@ -1,0 +1,694 @@
+[
+    {
+        "id": "bfe5ab0e3723cf10",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "759be43d0f24f646",
+        "type": "comment",
+        "z": "bfe5ab0e3723cf10",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 390,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c2aa2970df3858c9",
+        "type": "inject",
+        "z": "bfe5ab0e3723cf10",
+        "name": "posX",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "posX",
+        "payload": "",
+        "payloadType": "date",
+        "x": 280,
+        "y": 240,
+        "wires": [
+            [
+                "25d7a6f8493840f0"
+            ]
+        ]
+    },
+    {
+        "id": "25d7a6f8493840f0",
+        "type": "function",
+        "z": "bfe5ab0e3723cf10",
+        "name": "selectAll3",
+        "func": "msg.topic = \"SELECT * FROM data_records;\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "6c281448d30b3174"
+            ]
+        ]
+    },
+    {
+        "id": "6c281448d30b3174",
+        "type": "postgresql",
+        "z": "bfe5ab0e3723cf10",
+        "name": "Ch3",
+        "query": "SELECT * FROM data_records;",
+        "postgreSQLConfig": "ffc48ae35b5eb130",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 630,
+        "y": 240,
+        "wires": [
+            [
+                "f42e97ed4229b587"
+            ]
+        ]
+    },
+    {
+        "id": "f42e97ed4229b587",
+        "type": "debug",
+        "z": "bfe5ab0e3723cf10",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3499b672a70876b2",
+        "type": "ui_gauge",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "7bf18b0959815a91",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "DEMOGaugeTemp3",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "50",
+        "colors": [
+            "#ff4013",
+            "#fff995",
+            "#96d35f"
+        ],
+        "seg1": "19",
+        "seg2": "38",
+        "diff": false,
+        "className": "",
+        "x": 560,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "a91b518b09ae40c9",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sensor/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 320,
+        "wires": [
+            [
+                "3499b672a70876b2"
+            ]
+        ]
+    },
+    {
+        "id": "beb5742546c54617",
+        "type": "ui_gauge",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "7bf18b0959815a91",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "DEMOGaugeHump3",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "90",
+        "colors": [
+            "#ed719e",
+            "#fffbb9",
+            "#77bb41"
+        ],
+        "seg1": "30",
+        "seg2": "60",
+        "diff": false,
+        "className": "",
+        "x": 560,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "faf2263296aa980b",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sensor/hump",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 380,
+        "wires": [
+            [
+                "beb5742546c54617"
+            ]
+        ]
+    },
+    {
+        "id": "0955e6ca98785196",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sensor/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 460,
+        "wires": [
+            [
+                "2aeb0c3a0e4e1e7b"
+            ]
+        ]
+    },
+    {
+        "id": "18baf10f124660d1",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sensor/hump",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 520,
+        "wires": [
+            [
+                "7932a255655d7c6a"
+            ]
+        ]
+    },
+    {
+        "id": "2aeb0c3a0e4e1e7b",
+        "type": "ui_chart",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "bd0e1ebe4f8dd948",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "DEMOTempChart3",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "20",
+        "ymax": "30",
+        "removeOlder": "3",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#874efe",
+            "#ed719e",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 510,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7932a255655d7c6a",
+        "type": "ui_chart",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "bd0e1ebe4f8dd948",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "DEMOHumpChart3",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#77bb41",
+            "#9929bd",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 510,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed17d0d8edce0f94",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sens/h",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 600,
+        "wires": [
+            [
+                "df2f88160a850fa7"
+            ]
+        ]
+    },
+    {
+        "id": "03d52cea873b2369",
+        "type": "ui_gauge",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00B500",
+            "#E6E600",
+            "#CA3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 0,
+        "y": 0,
+        "wires": []
+    },
+    {
+        "id": "df2f88160a850fa7",
+        "type": "ui_chart",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "95cd6ccad65127c6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "RealDataChartH",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#e32400",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 500,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8f9c8e0999e79ed6",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sens/t",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 660,
+        "wires": [
+            [
+                "a311f8fdd82e5ae3"
+            ]
+        ]
+    },
+    {
+        "id": "a311f8fdd82e5ae3",
+        "type": "ui_chart",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "95cd6ccad65127c6",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "RealDataChartT",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#7b219f",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 500,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be144cb0da9cee26",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sens/h",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 760,
+        "wires": [
+            [
+                "9b09c33d16c982ce"
+            ]
+        ]
+    },
+    {
+        "id": "affd7fa0060269d3",
+        "type": "mqtt in",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "topic": "sens/t",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "6c1dd9598ca2678d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 820,
+        "wires": [
+            [
+                "e16001cce5a072e9"
+            ]
+        ]
+    },
+    {
+        "id": "9b09c33d16c982ce",
+        "type": "ui_gauge",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "27d35d1343dc67a6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "RealDataGaugeH",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 490,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "e16001cce5a072e9",
+        "type": "ui_gauge",
+        "z": "bfe5ab0e3723cf10",
+        "name": "",
+        "group": "27d35d1343dc67a6",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "RealDataGaugeT",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 490,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "ffc48ae35b5eb130",
+        "type": "postgreSQLConfig",
+        "name": "streaming",
+        "host": "212.233.79.24",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "streaming",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "hse2023",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "7bf18b0959815a91",
+        "type": "ui_group",
+        "name": "DEMO 2",
+        "tab": "8f861e1e27dc0b27",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "6c1dd9598ca2678d",
+        "type": "mqtt-broker",
+        "name": "mqtt",
+        "broker": "82.146.60.95",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "bd0e1ebe4f8dd948",
+        "type": "ui_group",
+        "name": "DEMO",
+        "tab": "8f861e1e27dc0b27",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "95cd6ccad65127c6",
+        "type": "ui_group",
+        "name": "RealDataMQTT",
+        "tab": "8f861e1e27dc0b27",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "27d35d1343dc67a6",
+        "type": "ui_group",
+        "name": "RealDataMQTT",
+        "tab": "8f861e1e27dc0b27",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8f861e1e27dc0b27",
+        "type": "ui_tab",
+        "name": "Состояние системы",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
